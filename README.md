@@ -26,27 +26,34 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 | File/folder              | Description |
 |--------------------------|-------------|
+| `Tailspin.SpaceGame.Web.sln` | Visual Studio solution.|
 | `Tailspin.SpaceGame.Web` | Application source code.|
 | `.gitignore`             | Defines what to ignore at commit time. |
 | `CODE_OF_CONDUCT.md`     | Microsoft Open Source Code of Conduct. |
-| `README.md`              | This README file. |
+| `gulpfile.js`            | Minifies web assets. |
 | `LICENSE`                | The license for the sample. |
+| `package.json`, `package-lock.json` | Specifies required Node packages. |
+| `README.md`              | This README file. |
 | `SECURITY.md`            | Guidelines for reporting security issues. |
 
 ## Prerequisites
 
-- An Azure subscription
-- An Azure DevOps account
 - Visual Studio Code
 - .NET Core 2.1
-- Git
-- A GitHub account
 
 ## Setup
 
+Load this project in Visual Studio Code. Then open the integrated terminal.
+
 ## Runnning the sample
 
-## Key concepts
+The Microsoft Learn modules explain everything you need to run the sample locally and how to build and deploy it through Azure Pipelines.
+
+To run the sample locally:
+
+```bash
+dotnet run --project Tailspin.SpaceGame.Web
+```
 
 ## Contributing
 
