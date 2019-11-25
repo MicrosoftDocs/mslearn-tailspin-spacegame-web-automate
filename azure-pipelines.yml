@@ -219,8 +219,8 @@ stages:
                   Variables = $vars}
                 Update-VSTeamVariableGroup @methodParameters
 
-- stage: 'DeployToDevAppService'
-  displayName: 'Deploy to the dev app service'
+- stage: 'Dev'
+  displayName: 'Deploy to the dev environment'
   dependsOn:
   - DBAVerificationScript
   - DBAVerificationApply
