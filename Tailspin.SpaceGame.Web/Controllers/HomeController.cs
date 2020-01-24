@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TailSpin.SpaceGame.Web.Models;
 
-
 namespace TailSpin.SpaceGame.Web.Controllers
 {
     public class HomeController : Controller
@@ -40,7 +39,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                     "Trio"
                 },
 
-                    GameRegions = new List<string>()
+                GameRegions = new List<string>()
                 {
                     "Milky Way",
                     "Andromeda",
@@ -61,6 +60,16 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Wait for the total count.
                 vm.TotalResults = await countItemsTask;
 
+                // Set previous and next hyperlinks.
+                if (page > 1)
+                {
+                    vm.PrevLink = $"/?page={page - 1}&pageSize={pageSize}&mode={mode}&region={region}#leaderboard";
+                }
+                if (vm.TotalResults > page * pageSize)
+                {
+                    vm.NextLink = $"/?page={page + 1}&pageSize={pageSize}&mode={mode}&region={region}#leaderboard";
+                }
+
                 // Fetch the user profile for each score.
                 // This creates a list that's parallel with the scores collection.
                 var profiles = new List<Task<Profile>>();
@@ -75,7 +84,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
 
                 return View(vm);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(vm);
             }
@@ -89,7 +98,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Fetch the user profile with the given identifier.
                 return View(new ProfileViewModel { Profile = await _dbRespository.GetProfileAsync(id), Rank = rank });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return RedirectToAction("/");
             }
