@@ -2,6 +2,11 @@ terraform {
   required_version = "> 0.12.0"
 
   backend "azurerm" {
+        storage_account_name    = "tfsa26306"
+        resource_group_name     = "tf-storage-rg"
+        container_name          = "tfstate" 
+        key                     = "terraform.tfstate"
+        access_key              = "0JZLfcSsJSArTFkJMMAeTL8e0H7piRgr/w63A/e+QcO6lnGmv9uM0xQsuxILnNg6U1Cu1NITX745p0DJoQOFCA=="
   }
 }
 
