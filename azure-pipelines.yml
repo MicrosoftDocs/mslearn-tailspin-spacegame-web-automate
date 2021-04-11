@@ -107,8 +107,6 @@ stages:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
   - deployment: Deploy
     dependsOn: Provision
-    variables:
-      WebAppNameDev: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ]
     pool:
       vmImage: 'ubuntu-18.04'
     environment: dev
@@ -122,5 +120,5 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Azure DevOps SP - Thiguish'
-              appName: $(WebAppNameDev)
+              appName: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ]
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
