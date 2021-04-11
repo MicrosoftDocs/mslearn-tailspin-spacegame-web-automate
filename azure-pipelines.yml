@@ -94,7 +94,9 @@ stages:
         terraform apply -input=false -auto-approve
 
         # Get the App Service name for the dev environment.
-        WebAppNameDev=$(terraform output appservice_name_dev:1:-1)
+        WebAppNameDev=$(terraform output appservice_name_dev)
+        echo $WebAppNameDev
+        WebAppNameDev=`echo ${WebAppNameDev:1:-1}`
         echo $WebAppNameDev
 
         # Write the WebAppNameDev variable to the pipeline.
