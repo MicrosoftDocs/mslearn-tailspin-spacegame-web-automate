@@ -95,7 +95,10 @@ stages:
 
         # Get the App Service name for the dev environment.
         WebAppNameDev=$(terraform output appservice_name_dev)
-
+        echo $WebAppNameDev
+        $WebAppNameDev = $WebAppNameDev  | tr -d '"'
+        echo $WebAppNameDev
+        
         # Write the WebAppNameDev variable to the pipeline.
         echo "##vso[task.setvariable variable=WebAppNameDev;isOutput=true]$WebAppNameDev"
       name: 'RunTerraform'
@@ -107,6 +110,8 @@ stages:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
   - deployment: Deploy
     dependsOn: Provision
+    variables:
+      WebAppNameDev: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ]
     pool:
       vmImage: 'ubuntu-18.04'
     environment: dev
@@ -120,5 +125,5 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Azure DevOps SP - Thiguish'
-              appName: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ]
+              appName: $(WebAppNameDev)
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
