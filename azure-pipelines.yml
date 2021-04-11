@@ -122,5 +122,5 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Azure DevOps SP - Thiguish'
-              appName: '$(WebAppNameDev)'
+              appName: $(WebAppNameDev)
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
