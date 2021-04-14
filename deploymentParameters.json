@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "deployPrefix": {
+            "value": "-dev-"
+        },
+        "keyVaultName": {
+          "value": "tailspin-vault-7365"
+        },
+        "uniqueSuffix": {
+            "value": "24834"
+        },
+        "adminPassword": {
+            "reference": {
+              "keyVault": {
+                "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/manuel-flores/providers/Microsoft.KeyVault/vaults/tailspin-vault-7365"
+              },
+              "secretName": "adminPassword"
+            }
+        },
+        "firstRun": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/manuel-flores/providers/Microsoft.KeyVault/vaults/tailspin-vault-7365"
+                },
+                "secretName": "firstRun"
+            }
+        }
+    }
+}
