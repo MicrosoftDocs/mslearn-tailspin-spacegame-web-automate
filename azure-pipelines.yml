@@ -160,40 +160,7 @@ stages:
               script: | 
                 Write-Host "Auto Generated SQL Update Script:"
                 Get-Content d:\a\1\s\GeneratedOutputFiles\tailspindatabase_Script.sql | foreach {Write-Output $_}
-          - task: PowerShell@2
-            displayName: Show change script and check for schema changes
-            inputs:
-              targetType: 'inline'
-              script: | 
-                # Print the schema change script
-                Write-Host "Auto Generated SQL Update Script:"
-                Get-Content d:\a\1\s\GeneratedOutputFiles\tailspindatabase_Script.sql | foreach {Write-Output $_}
-
-                # Check for schema changes
-                $file = Get-Content "d:\a\1\s\GeneratedOutputFiles\tailspindatabase_Script.sql"
-                $containsWord = $file | %{$_ -match "CREATE" -or $_ -match "ALTER" -or $_ -match "DROP"}
-                if ($containsWord -contains $true) {
-                  Install-Module VSTeam -Scope CurrentUser -Force
-                  Set-VSTeamAccount –Account $(Acct) -PersonalAccessToken $(PAT)
-                  $methodParameters = @{
-                    ProjectName = "$(System.TeamProject)"
-                    Name = "Release"}
-                  $vg = Get-VSTeamVariableGroup @methodParameters
-                  $vars = @{}
-                  $vg.variables | Get-Member -MemberType *Property | %{$vars.($_.Name) = $vg.variables.($_.Name)}
-                  $varName = "schemaChanged"
-                  $vars.$varName= @{}
-                  $vars.$varName.value = "True"
-                  $vars.$varName.isSecret = $false
-                  $methodParameters = @{
-                    id = $vg.id
-                    ProjectName = "$(System.TeamProject)"
-                    Name = "Release"
-                    Description = ""
-                    Type = "Vsts"
-                    Variables = $vars}
-                  Update-VSTeamVariableGroup @methodParameters}
-
+          
 - stage: DBAVerificationApply
   displayName: 'Apply database schema changes'
   dependsOn: DBAVerificationScript
