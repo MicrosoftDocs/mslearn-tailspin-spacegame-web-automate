@@ -6,15 +6,15 @@
             "value": "-dev-"
         },
         "keyVaultName": {
-          "value": "tailspin-vault-12790"
+          "value": "tailspin-vault-27687"
         },
         "uniqueSuffix": {
-            "value": "13127"
+            "value": "9512"
         },
         "adminPassword": {
             "reference": {
               "keyVault": {
-                "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/alejandro-padilla/providers/Microsoft.KeyVault/vaults/tailspin-vault-12790"
+                "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/alejandro-padilla/providers/Microsoft.KeyVault/vaults/tailspin-vault-27687"
               },
               "secretName": "adminPassword"
             }
@@ -22,7 +22,7 @@
         "firstRun": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/alejandro-padilla/providers/Microsoft.KeyVault/vaults/tailspin-vault-12790"
+                    "id": "/subscriptions/c4774376-bc4c-48e6-93eb-c0ac26c6345d/resourceGroups/alejandro-padilla/providers/Microsoft.KeyVault/vaults/tailspin-vault-27687"
                 },
                 "secretName": "firstRun"
             }
