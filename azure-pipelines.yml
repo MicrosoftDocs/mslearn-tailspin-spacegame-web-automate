@@ -94,6 +94,30 @@ stages:
         artifactName: dropDacpac
       condition: succeededOrFailed()
 
+- stage: 'Provision'
+  displayName: 'Provision the database and web application'
+  jobs: 
+  - job: 'DeployInfrastructure'
+    displayName: 'Deploy infrastructure job'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    variables:
+    - group: 'Release'
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        ConnectedServiceName: 'Resource Manager - Tailspin - Space Game'
+        subscriptionName: '$(subscription)'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'alejandro-padilla'
+        location: '$(location)'
+        templateLocation: 'Linked artifact'
+        csmFile: 'template.json'
+        csmParametersFile: 'deploymentParameters.json'
+        deploymentMode: 'Incremental'
+        deploymentOutputs: ResourceGroupDeploymentOutputs
+
 - stage: DBAVerificationScript
   displayName: 'Script database schema changes'
   dependsOn: Provision
@@ -108,6 +132,11 @@ stages:
       runOnce:
         deploy:
           steps: 
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              keyVaultName: '$(keyVaultName)'
+              secretsFilter: '*'
           - download: current
             artifact: dropDacpac
             patterns: '**/*'
@@ -139,7 +168,6 @@ stages:
                 # Print the schema change script
                 Write-Host "Auto Generated SQL Update Script:"
                 Get-Content d:\a\1\s\GeneratedOutputFiles\tailspindatabase_Script.sql | foreach {Write-Output $_}
-
                 # Check for schema changes
                 $file = Get-Content "d:\a\1\s\GeneratedOutputFiles\tailspindatabase_Script.sql"
                 $containsWord = $file | %{$_ -match "CREATE" -or $_ -match "ALTER" -or $_ -match "DROP"}
@@ -164,22 +192,29 @@ stages:
                     Type = "Vsts"
                     Variables = $vars}
                   Update-VSTeamVariableGroup @methodParameters}
-
+          
 - stage: DBAVerificationApply
   displayName: 'Apply database schema changes'
   dependsOn: DBAVerificationScript
-  variables: 
-  - group: 'Release'
   condition: and(succeeded('DBAVerificationScript'), eq(variables['schemaChanged'], True))
+  variables:
+  - group: 'Release'
   jobs:
   - deployment: DBAVerificationApply
     pool:
       vmImage: 'windows-2019'
+    variables:
+    - group: 'Release'
     environment: 'dbaverificationapply'
     strategy:
       runOnce:
         deploy:
           steps:
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              keyVaultName: '$(keyVaultName)'
+              secretsFilter: '*'
           - download: current
             artifact: dropDacpac
             patterns: '**/*'
@@ -241,6 +276,11 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              keyVaultName: '$(keyVaultName)'
+              secretsFilter: '*'
           - download: current
             artifact: drop
           - task: AzureWebApp@1
@@ -249,3 +289,10 @@ stages:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
               appName: 'tailspin-space-game-web-dev-$(uniqueSuffix)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+          - task: AzureAppServiceSettings@1
+            displayName: Azure App Service Settings
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              appName: 'tailspin-space-game-web-dev-$(uniqueSuffix)'
+              connectionStrings: |
+                [{ "name": "DefaultConnection","value": "$(connectionString)","type": "SQLAzure","slotSetting": false }]
