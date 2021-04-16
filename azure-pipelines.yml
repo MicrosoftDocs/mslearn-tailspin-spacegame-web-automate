@@ -110,7 +110,7 @@ stages:
         ConnectedServiceName: 'Resource Manager - Tailspin - Space Game'
         subscriptionName: '$(subscription)'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'tailspin-spacegame-web-rg'
+        resourceGroupName: 'alejandro-padilla'
         location: '$(location)'
         templateLocation: 'Linked artifact'
         csmFile: 'template.json'
